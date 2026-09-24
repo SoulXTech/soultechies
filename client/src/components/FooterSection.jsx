@@ -21,8 +21,9 @@ export default function FooterSection({ isPreloaderDone }) {
   }
 
   // =========================================================================
-  // CURTAIN-UP SCROLL TRANSITION (p: 0.915 → 1.00)
-  // The footer curtain slides up from translateY(100%) to translateY(0%)
+  // CURTAIN-UP SCROLL TRANSITION (p: 0.980 → 1.000)
+  // After a generous delay on the Robot Contact Form (0.950 → 0.980),
+  // the footer curtain slides up from translateY(100%) to translateY(0%)
   // completely covering the Contact Us / Robot section from the bottom.
   // =========================================================================
   useEffect(() => {
@@ -38,14 +39,14 @@ export default function FooterSection({ isPreloaderDone }) {
       onUpdate: (self) => {
         const p = self.progress
 
-        if (p < 0.95) {
+        if (p < 0.980) {
           footer.style.transform = 'translateY(100%)'
           footer.style.opacity = '0'
           footer.style.visibility = 'hidden'
           footer.style.pointerEvents = 'none'
         } else {
           // Slide up smoothly like a solid curtain
-          const t = (p - 0.95) / 0.05
+          const t = (p - 0.980) / 0.020
           const curtainEase = 1 - Math.pow(1 - t, 2.5) // smooth cubic deceleration
           const translateY = (100 * (1 - curtainEase)).toFixed(2)
 
@@ -257,7 +258,7 @@ export default function FooterSection({ isPreloaderDone }) {
               { label: 'About Us', action: () => scrollToSection(0.32) },
               { label: 'Map Ecosystem', action: () => scrollToSection(0.56) },
               { label: 'Projects', action: () => scrollToSection(0.68) },
-              { label: 'Contact', action: () => scrollToSection(0.86) },
+              { label: 'Contact', action: () => scrollToSection(0.95) },
             ].map((item) => (
               <button
                 key={item.label}
@@ -336,17 +337,17 @@ export default function FooterSection({ isPreloaderDone }) {
               NETWORK
             </span>
             {[
-              { label: 'LinkedIn', url: 'https://linkedin.com' },
-              { label: 'Instagram', url: 'https://instagram.com' },
+              { label: 'LinkedIn', url: 'https://www.linkedin.com/company/soultechies-corp/' },
+              { label: 'Instagram', url: 'https://www.instagram.com/soultechies.corp?stkn=cnFpaWFvNW1veWRy' },
+              { label: 'Facebook', url: 'https://www.facebook.com/share/1BBTk12Aw8/' },
               { label: 'X (Twitter)', url: 'https://x.com' },
               { label: 'GitHub', url: 'https://github.com' },
-              { label: 'Discord', url: 'https://discord.com' },
             ].map((social) => (
               <a
                 key={social.label}
                 href={social.url}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 style={{
                   color: 'rgba(255, 255, 255, 0.65)',
                   fontFamily: "'Plus Jakarta Sans', sans-serif",

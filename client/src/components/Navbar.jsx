@@ -75,6 +75,17 @@ export default function Navbar({ isPreloaderDone }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(true)
   const [isMenuHovered, setIsMenuHovered] = useState(false)
+  const [isMobileScreen, setIsMobileScreen] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth <= 1024
+  )
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileScreen(window.innerWidth <= 1024)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const lastScrollY = useRef(0)
   const isAnimatingRef = useRef(false)
@@ -119,7 +130,7 @@ export default function Navbar({ isPreloaderDone }) {
     )
   }, [isPreloaderDone])
 
-  // Hide Navbar when footer curtain slides up (p >= 0.95)
+  // Hide Navbar when footer curtain slides up (p >= 0.980) — desktop only
   useEffect(() => {
     if (!isPreloaderDone || !wrapperRef.current) return
 
@@ -131,9 +142,19 @@ export default function Navbar({ isPreloaderDone }) {
       end: 'bottom bottom',
       scrub: true,
       onUpdate: (self) => {
+        // Do not hide navbar on mobile / tablet devices (screen width <= 1024px)
+        if (window.innerWidth <= 1024) {
+          if (hasEnteredRef.current && !isMenuOpen) {
+            wrapper.style.transform = 'translateX(-50%) translateY(0px)'
+            wrapper.style.opacity = '1'
+            wrapper.style.pointerEvents = 'auto'
+          }
+          return
+        }
+
         const p = self.progress
-        if (p >= 0.945) {
-          const t = Math.min(1.0, (p - 0.945) / 0.03)
+        if (p >= 0.980) {
+          const t = Math.min(1.0, (p - 0.980) / 0.015)
           wrapper.style.transform = `translateX(-50%) translateY(${t * 80}px)`
           wrapper.style.opacity = `${Math.max(0, 1 - t * 2)}`
           wrapper.style.pointerEvents = 'none'
@@ -399,25 +420,24 @@ export default function Navbar({ isPreloaderDone }) {
   // STRICT GUARD: Navbar is NOT rendered in DOM at all while preloader is running!
   if (!isPreloaderDone) return null
 
-  // Helper to scroll to specific section progress on click
-  const scrollToPercent = (progress) => {
-    handleCloseMenu()
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight
-    window.scrollTo({ top: maxScroll * progress, behavior: 'smooth' })
-  }
+  const mainLinks = isMobileScreen
+    ? [
+        { label: 'Services', href: '#mobile-services', targetId: 'mobile-services' },
+        { label: 'Our Work', href: '#mobile-projects', targetId: 'mobile-projects' },
+        { label: 'Worked With', href: '#mobile-process', targetId: 'mobile-process' },
+      ]
+    : [
+        { label: 'About Us', href: '#about', progress: 0.14 },
+        { label: 'Services', href: '#services', progress: 0.32 },
+        { label: 'Our Work', href: '#our-work', progress: 0.65 },
+        { label: 'Worked With', href: '#worked-with', progress: 0.86 },
+      ]
 
-  const mainLinks = [
-    { label: 'Home', action: () => { handleCloseMenu(); window.scrollTo({ top: 0, behavior: 'smooth' }) } },
-    { label: 'Services', action: () => scrollToPercent(0.18) },
-    { label: 'Our work', action: () => scrollToPercent(0.42) },
-    { label: 'Process', action: () => scrollToPercent(0.65) },
-    { label: 'About', action: () => scrollToPercent(0.22) },
-    { label: 'FAQ', action: () => scrollToPercent(0.85) },
-  ]
-
-  const socialLinks = [
-    { label: 'Linkedin', href: 'https://www.linkedin.com/company/soultechies' },
-    { label: 'Instagram', href: 'https://www.instagram.com/soultechies' },
+  const leftSecondary = ['Support', 'Terms of Use', 'Policy Privacy']
+  const rightSecondary = [
+    { label: 'LinkedIn', url: 'https://www.linkedin.com/company/soultechies-corp/' },
+    { label: 'Instagram', url: 'https://www.instagram.com/soultechies.corp?stkn=cnFpaWFvNW1veWRy' },
+    { label: 'Facebook', url: 'https://www.facebook.com/share/1BBTk12Aw8/' },
   ]
 
   return (
@@ -441,6 +461,7 @@ export default function Navbar({ isPreloaderDone }) {
       {/* Main Floating Wrapper Pinned at Fixed Screen Position (bottom: 32px) */}
       <div
         ref={wrapperRef}
+        data-navbar-wrapper
         style={{
           position: 'fixed',
           bottom: '32px',
@@ -526,13 +547,24 @@ export default function Navbar({ isPreloaderDone }) {
             {/* Right: Dark Pill CTA Button ("Contact") */}
             <div ref={rightContentRef} style={{ willChange: 'opacity', zIndex: 10 }}>
               <button
+                onClick={() => {
+                  if (isMobileScreen) {
+                    const el = document.getElementById('mobile-contact')
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth' })
+                      return
+                    }
+                  }
+                  const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+                  window.scrollTo({ top: maxScroll * 0.95, behavior: 'smooth' })
+                }}
                 style={{
                   padding: '10px 24px',
                   borderRadius: '999px',
                   background: '#1c1c22',
                   border: 'none',
                   color: '#ffffff',
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontFamily: "'Plus Jakarta Sans', 'Space Grotesk', 'Outfit', sans-serif",
                   fontSize: '14px',
                   fontWeight: 600,
                   cursor: 'pointer',
@@ -553,13 +585,13 @@ export default function Navbar({ isPreloaderDone }) {
             </div>
           </div>
 
-          {/* STATE B: Expanded Menu Card Content (Reference Diagram Match) */}
+          {/* STATE B: Expanded Menu Card Content */}
           <div
             ref={menuContentRef}
             style={{
               display: 'none',
               flexDirection: 'column',
-              padding: '42px 34px 28px 34px',
+              padding: '36px 32px 32px 32px',
               width: '100%',
               boxSizing: 'border-box',
               position: 'absolute',
@@ -568,105 +600,193 @@ export default function Navbar({ isPreloaderDone }) {
               willChange: 'opacity, transform',
             }}
           >
-            {/* Two-Column Navigation: Main List on Left, Socials on Right */}
+            {/* Top row: Home header ONLY (Logo is permanently pinned in absolute center at top: 28px) */}
             <div
               style={{
                 display: 'flex',
+                alignItems: 'center',
                 justifyContent: 'space-between',
-                alignItems: 'flex-start',
-                marginBottom: '26px',
-                paddingTop: '6px',
+                marginBottom: '20px',
+                height: '44px',
               }}
             >
-              {/* Left Column: Home, Services, Our work, Process, About, FAQ */}
-              <div
+              <span
+                onClick={() => {
+                  handleCloseMenu()
+                  if (isMobileScreen) {
+                    const el = document.getElementById('mobile-hero')
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth' })
+                      return
+                    }
+                  }
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }}
                 style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '12px',
+                  fontFamily: "'Plus Jakarta Sans', 'Space Grotesk', 'Outfit', sans-serif",
+                  fontSize: '28px',
+                  fontWeight: 500,
+                  color: '#6b6b78',
+                  letterSpacing: '-0.02em',
+                  cursor: 'pointer',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#1c1c22'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#6b6b78'
                 }}
               >
-                {mainLinks.map((link) => (
-                  <button
-                    key={link.label}
-                    type="button"
-                    onClick={link.action}
+                Home
+              </span>
+            </div>
+
+            {/* Main Nav Links */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                marginBottom: '28px',
+              }}
+            >
+              {mainLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleCloseMenu()
+                    if (isMobileScreen) {
+                      const el = document.getElementById(link.targetId || link.href.replace('#', ''))
+                      if (el) {
+                        el.scrollIntoView({ behavior: 'smooth' })
+                      }
+                    } else if (link.progress !== undefined) {
+                      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+                      window.scrollTo({ top: maxScroll * link.progress, behavior: 'smooth' })
+                    }
+                  }}
+                  style={{
+                    fontFamily: "'Plus Jakarta Sans', 'Space Grotesk', 'Outfit', sans-serif",
+                    fontSize: '28px',
+                    fontWeight: 600,
+                    color: '#1c1c22',
+                    textDecoration: 'none',
+                    letterSpacing: '-0.02em',
+                    lineHeight: 1.2,
+                    transition: 'transform 0.2s, color 0.2s',
+                    display: 'inline-block',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#50505e'
+                    e.currentTarget.style.transform = 'translateX(4px)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = '#1c1c22'
+                    e.currentTarget.style.transform = 'translateX(0)'
+                  }}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+
+            {/* Horizontal Divider */}
+            <div
+              style={{
+                height: '1px',
+                background: 'rgba(0, 0, 0, 0.12)',
+                marginBottom: '24px',
+              }}
+            />
+
+            {/* Secondary Links Grid */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '20px',
+                marginBottom: '28px',
+              }}
+            >
+              {/* Left Column */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {leftSecondary.map((item) => (
+                  <a
+                    key={item}
+                    href="#"
+                    onClick={handleCloseMenu}
                     style={{
-                      background: 'none',
-                      border: 'none',
-                      padding: 0,
-                      textAlign: 'left',
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                      fontSize: 'clamp(21px, 2.2vw, 25px)',
+                      fontFamily: "'Space Grotesk', 'Outfit', sans-serif",
+                      fontSize: '14px',
                       fontWeight: 600,
                       color: '#1c1c22',
-                      letterSpacing: '-0.02em',
-                      lineHeight: 1.25,
-                      transition: 'transform 0.2s ease, color 0.2s ease',
-                      display: 'inline-block',
-                      cursor: 'pointer',
+                      textDecoration: 'none',
+                      transition: 'opacity 0.2s',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.color = '#6366f1'
-                      e.currentTarget.style.transform = 'translateX(4px)'
+                      e.currentTarget.style.opacity = '0.6'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.color = '#1c1c22'
-                      e.currentTarget.style.transform = 'translateX(0)'
+                      e.currentTarget.style.opacity = '1'
                     }}
                   >
-                    {link.label}
-                  </button>
+                    {item}
+                  </a>
                 ))}
               </div>
 
-              {/* Right Column: Linkedin, Instagram (aligned with Services and Our work) */}
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '12px',
-                  paddingTop: '43px', // Vertically aligns across from 'Services'
-                }}
-              >
-                {socialLinks.map((social) => (
+              {/* Right Column */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {rightSecondary.map((item) => (
                   <a
-                    key={social.label}
-                    href={social.href}
+                    key={item.label}
+                    href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={handleCloseMenu}
                     style={{
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                      fontSize: 'clamp(20px, 2.0vw, 23px)',
+                      fontFamily: "'Space Grotesk', 'Outfit', sans-serif",
+                      fontSize: '14px',
                       fontWeight: 600,
                       color: '#1c1c22',
                       textDecoration: 'none',
-                      letterSpacing: '-0.02em',
-                      lineHeight: 1.25,
-                      transition: 'transform 0.2s ease, color 0.2s ease',
-                      display: 'inline-block',
-                      cursor: 'pointer',
+                      transition: 'opacity 0.2s, transform 0.2s',
+                      display: 'inline-flex',
+                      alignItems: 'center',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.color = '#6366f1'
-                      e.currentTarget.style.transform = 'translateX(4px)'
+                      e.currentTarget.style.opacity = '0.6'
+                      e.currentTarget.style.transform = 'translateX(2px)'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.color = '#1c1c22'
+                      e.currentTarget.style.opacity = '1'
                       e.currentTarget.style.transform = 'translateX(0)'
                     }}
                   >
-                    {social.label}
+                    {item.label}
                   </a>
                 ))}
               </div>
             </div>
 
-            {/* Bottom CTA: Contact */}
+            {/* Bottom CTA Button ("Contact") */}
             <button
-              type="button"
-              onClick={() => scrollToPercent(0.95)}
+              onClick={() => {
+                handleCloseMenu()
+                if (isMobileScreen) {
+                  const el = document.getElementById('mobile-contact')
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' })
+                    return
+                  }
+                }
+                const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+                window.scrollTo({ top: maxScroll * 0.95, behavior: 'smooth' })
+              }}
               style={{
                 width: '100%',
                 padding: '16px',
@@ -674,23 +794,19 @@ export default function Navbar({ isPreloaderDone }) {
                 color: '#ffffff',
                 border: 'none',
                 borderRadius: '20px',
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontSize: '16px',
+                fontFamily: "'Space Grotesk', 'Outfit', sans-serif",
+                fontSize: '15px',
                 fontWeight: 600,
                 cursor: 'pointer',
-                letterSpacing: '-0.01em',
-                transition: 'background 0.2s, transform 0.2s, box-shadow 0.2s',
-                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.25)',
+                transition: 'background 0.2s, transform 0.2s',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#2e2e38'
-                e.currentTarget.style.transform = 'scale(1.015)'
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.35)'
+                e.currentTarget.style.background = '#32323a'
+                e.currentTarget.style.transform = 'scale(1.01)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = '#1c1c22'
                 e.currentTarget.style.transform = 'scale(1)'
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.25)'
               }}
             >
               Contact

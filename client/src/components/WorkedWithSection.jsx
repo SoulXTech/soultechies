@@ -5,44 +5,21 @@ import { Application } from '@splinetool/runtime'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// Auto-discover all client logo SVGs from /public/logos/ dynamically without hardcoding names
-const logoFiles = import.meta.glob('/public/logos/*.svg', {
-  eager: true,
-  query: '?url',
-  import: 'default',
-})
-
-// Extract clean brand names & URLs
-const CLIENT_LOGOS = Object.entries(logoFiles).map(([path, url]) => {
-  const filename = path.split('/').pop().replace('.svg', '')
-  const brandName = filename
-    .replace(/-logo|-svgrepo|-com|-[0-9]+/g, '')
-    .replace(/-icon/g, '')
-    .toUpperCase()
-  return {
-    id: path,
-    name: brandName || 'CLIENT',
-    url: url || path.replace('/public', ''),
-  }
-})
-
-// Fallback in case globbing returned empty array
-const FALLBACK_LOGOS = [
-  { id: '1', name: 'AIRBNB', url: '/logos/airbnb-2-logo-svgrepo-com.svg' },
-  { id: '2', name: 'AMAZON', url: '/logos/amazon-icon-logo-svgrepo-com.svg' },
-  { id: '3', name: 'APPLE', url: '/logos/apple-logo-svgrepo-com.svg' },
-  { id: '4', name: 'ETHEREUM', url: '/logos/ethereum-logo-svgrepo-com.svg' },
-  { id: '5', name: 'FACEBOOK', url: '/logos/facebook-icon-logo-svgrepo-com.svg' },
-  { id: '6', name: 'GOOGLE', url: '/logos/google-icon-logo-svgrepo-com.svg' },
-  { id: '7', name: 'NETFLIX', url: '/logos/netflix-2-logo-svgrepo-com.svg' },
-  { id: '8', name: 'TINDER', url: '/logos/tinder-1-logo-svgrepo-com.svg' },
-  { id: '9', name: 'YOUTUBE', url: '/logos/youtube-icon-logo-svgrepo-com.svg' },
+// Client logo SVGs served directly from public directory (/logos/...)
+export const CLIENT_LOGOS = [
+  { id: 'airbnb', name: 'AIRBNB', url: '/logos/airbnb-2-logo-svgrepo-com.svg' },
+  { id: 'amazon', name: 'AMAZON', url: '/logos/amazon-icon-logo-svgrepo-com.svg' },
+  { id: 'apple', name: 'APPLE', url: '/logos/apple-logo-svgrepo-com.svg' },
+  { id: 'ethereum', name: 'ETHEREUM', url: '/logos/ethereum-logo-svgrepo-com.svg' },
+  { id: 'facebook', name: 'FACEBOOK', url: '/logos/facebook-icon-logo-svgrepo-com.svg' },
+  { id: 'google', name: 'GOOGLE', url: '/logos/google-icon-logo-svgrepo-com.svg' },
+  { id: 'netflix', name: 'NETFLIX', url: '/logos/netflix-2-logo-svgrepo-com.svg' },
+  { id: 'tinder', name: 'TINDER', url: '/logos/tinder-1-logo-svgrepo-com.svg' },
+  { id: 'youtube', name: 'YOUTUBE', url: '/logos/youtube-icon-logo-svgrepo-com.svg' },
 ]
 
-const LOGOS_LIST = CLIENT_LOGOS.length > 0 ? CLIENT_LOGOS : FALLBACK_LOGOS
-
 // Duplicate list for seamless unbroken horizontal loop
-const MARQUEE_LOGOS = [...LOGOS_LIST, ...LOGOS_LIST, ...LOGOS_LIST]
+const MARQUEE_LOGOS = [...CLIENT_LOGOS, ...CLIENT_LOGOS, ...CLIENT_LOGOS]
 
 const SERVICES = [
   '3D Web Experiences',
@@ -52,18 +29,285 @@ const SERVICES = [
   'Custom Architecture',
 ]
 
+export const PROCESS_STEPS = [
+  {
+    step: '01',
+    title: 'DISCOVER',
+    description: 'We understand your business, goals and audience to find the right opportunities.',
+    accent: '#a855f7',
+    lookAt: { x: -0.85, y: 0.1 },
+    icon: (
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="11" cy="11" r="7" />
+        <line x1="21" y1="21" x2="16" y2="16" />
+      </svg>
+    ),
+  },
+  {
+    step: '02',
+    title: 'DESIGN',
+    description: 'We create user-focused designs that communicate your value and engage users.',
+    accent: '#c084fc',
+    lookAt: { x: -0.45, y: 0.1 },
+    icon: (
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        {/* Bézier vector curve with anchor nodes matching reference */}
+        <path d="M4 16C4 8 20 8 20 16" stroke="#ffffff" strokeWidth="2" />
+        <circle cx="4" cy="16" r="2.5" fill="#c084fc" stroke="#ffffff" strokeWidth="1.5" />
+        <circle cx="20" cy="16" r="2.5" fill="#c084fc" stroke="#ffffff" strokeWidth="1.5" />
+        <circle cx="12" cy="8" r="2.5" fill="#c084fc" stroke="#ffffff" strokeWidth="1.5" />
+        <path d="M12 10.5v6.5" stroke="#ffffff" strokeWidth="2" />
+        <path d="M10 17l2 3 2-3h-4z" fill="#c084fc" stroke="#ffffff" strokeWidth="1" />
+      </svg>
+    ),
+  },
+  {
+    step: '03',
+    title: 'BUILD',
+    description: 'We bring the design to life with clean, scalable code and powerful functionality.',
+    accent: '#e879f9',
+    lookAt: { x: 0.45, y: 0.1 },
+    icon: (
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="16 18 22 12 16 6" />
+        <polyline points="8 6 2 12 8 18" />
+        <line x1="14" y1="4" x2="10" y2="20" stroke="#c084fc" strokeWidth="2" />
+      </svg>
+    ),
+  },
+  {
+    step: '04',
+    title: 'LAUNCH',
+    description: 'We test, optimize and launch your digital product for real-world impact.',
+    accent: '#38bdf8',
+    lookAt: { x: 0.85, y: 0.1 },
+    icon: (
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" fill="rgba(192, 132, 252, 0.4)" />
+        <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+        <circle cx="15" cy="9" r="1.5" fill="#c084fc" />
+        <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+        <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+      </svg>
+    ),
+  },
+]
+
+// Horizontal flow connector with glowing neon violet bead and arrowhead matching reference
+function ProcessConnector() {
+  return (
+    <div
+      className="process-connector-arrow"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        width: 'clamp(18px, 1.8vw, 30px)',
+        height: '24px',
+        flexShrink: 0,
+        pointerEvents: 'none',
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: '6px',
+          height: '1.5px',
+          background: 'linear-gradient(90deg, rgba(168, 85, 247, 0.4) 0%, rgba(192, 132, 252, 0.9) 50%, rgba(168, 85, 247, 0.7) 100%)',
+          boxShadow: '0 0 8px rgba(168, 85, 247, 0.5)',
+        }}
+      />
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 1,
+          width: '6px',
+          height: '6px',
+          borderRadius: '50%',
+          backgroundColor: '#c084fc',
+          boxShadow: '0 0 10px #c084fc, 0 0 18px #a855f7',
+        }}
+      />
+      <svg
+        width="7"
+        height="11"
+        viewBox="0 0 7 11"
+        fill="none"
+        style={{
+          position: 'absolute',
+          right: '1px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+        }}
+      >
+        <path d="M1.5 1.5L5.5 5.5L1.5 9.5" stroke="#c084fc" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </div>
+  )
+}
+
+function ProcessCard({ step, isHovered, onHover, onLeave }) {
+  return (
+    <div
+      className="process-card-item"
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+      style={{
+        position: 'relative',
+        width: 'clamp(170px, 11.8vw, 215px)',
+        minHeight: 'clamp(235px, 28vh, 275px)',
+        borderRadius: 'clamp(18px, 1.4vw, 22px)',
+        // Deep Obsidian Glass matching reference
+        background: isHovered
+          ? 'linear-gradient(155deg, rgba(255, 255, 255, 0.09) 0%, rgba(168, 85, 247, 0.14) 28%, rgba(18, 12, 40, 0.90) 70%, rgba(7, 7, 22, 0.98) 100%)'
+          : 'linear-gradient(155deg, rgba(255, 255, 255, 0.05) 0%, rgba(168, 85, 247, 0.05) 28%, rgba(12, 9, 30, 0.82) 70%, rgba(6, 6, 18, 0.94) 100%)',
+        backdropFilter: 'blur(28px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+        padding: 'clamp(18px, 2.2vh, 24px) clamp(12px, 1vw, 18px)',
+        boxSizing: 'border-box',
+        color: '#ffffff',
+        border: isHovered ? '1.5px solid rgba(192, 132, 252, 0.75)' : '1px solid rgba(168, 85, 247, 0.28)',
+        borderTop: isHovered ? '1.5px solid rgba(255, 255, 255, 0.65)' : '1px solid rgba(255, 255, 255, 0.32)',
+        boxShadow: isHovered
+          ? '0 20px 50px -10px rgba(0, 0, 0, 0.95), 0 0 32px rgba(168, 85, 247, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.45)'
+          : '0 14px 38px -10px rgba(0, 0, 0, 0.85), 0 0 16px -4px rgba(168, 85, 247, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.22)',
+        transform: isHovered ? 'translateY(-6px) scale(1.02)' : 'translateY(0px) scale(1.0)',
+        transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+        cursor: 'pointer',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        textAlign: 'center',
+        flexShrink: 0,
+      }}
+    >
+      {/* Specular gloss top curve */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '40%',
+          background: 'linear-gradient(160deg, rgba(255, 255, 255, 0.08) 0%, transparent 100%)',
+          pointerEvents: 'none',
+          borderRadius: 'clamp(18px, 1.4vw, 22px) clamp(18px, 1.4vw, 22px) 0 0',
+        }}
+      />
+
+      {/* Top Left Step Number matching reference */}
+      <div
+        style={{
+          alignSelf: 'flex-start',
+          fontFamily: "'Space Grotesk', monospace",
+          fontSize: 'clamp(15px, 1.1vw, 18px)',
+          fontWeight: 800,
+          color: '#c084fc',
+          letterSpacing: '0.04em',
+          marginBottom: 'clamp(8px, 1vh, 12px)',
+          textShadow: isHovered ? '0 0 14px rgba(192, 132, 252, 0.8)' : '0 0 8px rgba(192, 132, 252, 0.35)',
+          transition: 'text-shadow 0.3s ease',
+        }}
+      >
+        {step.step}
+      </div>
+
+      {/* Center Circular Glowing Icon Ring matching reference! */}
+      <div
+        style={{
+          position: 'relative',
+          width: 'clamp(56px, 4vw, 66px)',
+          height: 'clamp(56px, 4vw, 66px)',
+          borderRadius: '50%',
+          border: isHovered ? '2px solid #c084fc' : '2px solid rgba(192, 132, 252, 0.65)',
+          background: isHovered
+            ? 'radial-gradient(circle, rgba(168, 85, 247, 0.35) 0%, rgba(18, 12, 40, 0.9) 75%)'
+            : 'radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, rgba(12, 9, 30, 0.85) 75%)',
+          boxShadow: isHovered
+            ? '0 0 32px rgba(192, 132, 252, 0.75), inset 0 0 16px rgba(192, 132, 252, 0.45)'
+            : '0 0 18px rgba(168, 85, 247, 0.45), inset 0 0 10px rgba(168, 85, 247, 0.22)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: 'clamp(12px, 1.5vh, 16px)',
+          transform: isHovered ? 'scale(1.06)' : 'scale(1.0)',
+          transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
+      >
+        {step.icon}
+      </div>
+
+      {/* Step Title */}
+      <h3
+        style={{
+          margin: '0 0 clamp(6px, 0.8vh, 8px) 0',
+          fontFamily: "'Outfit', 'Space Grotesk', sans-serif",
+          fontSize: 'clamp(15px, 1.1vw, 18px)',
+          fontWeight: 800,
+          letterSpacing: '0.04em',
+          textTransform: 'uppercase',
+          color: '#ffffff',
+          textShadow: isHovered ? '0 0 18px rgba(192, 132, 252, 0.7)' : '0 2px 10px rgba(0, 0, 0, 0.6)',
+          transition: 'text-shadow 0.3s ease',
+        }}
+      >
+        {step.title}
+      </h3>
+
+      {/* Step Description */}
+      <p
+        style={{
+          margin: 0,
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          fontSize: 'clamp(11px, 0.76vw, 12.5px)',
+          fontWeight: 400,
+          lineHeight: 1.5,
+          color: 'rgba(230, 230, 255, 0.72)',
+          letterSpacing: '-0.01em',
+        }}
+      >
+        {step.description}
+      </p>
+
+      {/* Laser edge glow line at bottom on hover */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: '12%',
+          right: '12%',
+          height: '1.5px',
+          background: isHovered
+            ? 'linear-gradient(90deg, transparent, #c084fc, #e879f9, transparent)'
+            : 'transparent',
+          boxShadow: isHovered ? '0 0 14px #c084fc' : 'none',
+          transition: 'all 0.35s ease',
+          pointerEvents: 'none',
+        }}
+      />
+    </div>
+  )
+}
+
 export default function WorkedWithSection({ isPreloaderDone }) {
   const stageRef = useRef(null)
   const canvasRef = useRef(null)
   const splineAppRef = useRef(null)
   const modelWrapperRef = useRef(null)
   const marqueeWrapperRef = useRef(null)
-  const titleWrapperRef = useRef(null)
   const formWrapperRef = useRef(null)
   const formCardRef = useRef(null)
+  const processLeftRef = useRef(null)
+  const processRightRef = useRef(null)
+  const processBridgeRef = useRef(null)
+  const hoveredProcessStepRef = useRef(null)
 
   const [splineLoaded, setSplineLoaded] = useState(false)
   const [hoveredLogo, setHoveredLogo] = useState(null)
+  const [activeHoveredStep, setActiveHoveredStep] = useState(null)
 
   // Form State
   const [formData, setFormData] = useState({
@@ -171,10 +415,11 @@ export default function WorkedWithSection({ isPreloaderDone }) {
 
     // Damped animation loop for natural organic look-at motion
     const animateLookAt = () => {
-      const target = mouseTargetRef.current
+      // Robot focuses on the hovered process card, or follows cursor smoothly
+      const target = hoveredProcessStepRef.current || mouseTargetRef.current
       const curr = mouseCurrentRef.current
 
-      // Smooth damped lerp toward cursor
+      // Smooth damped lerp toward target
       curr.x += (target.x - curr.x) * 0.08
       curr.y += (target.y - curr.y) * 0.08
 
@@ -211,13 +456,14 @@ export default function WorkedWithSection({ isPreloaderDone }) {
   }, [])
 
   // =========================================================================
-  // MASTER SCROLL TRIGGER CHOREOGRAPHY (960vh timeline):
+  // MASTER SCROLL TRIGGER CHOREOGRAPHY (1380vh timeline):
   //
-  //  p: 0.00 → 0.73  — Offscreen (behind Project Showcase)
-  //  p: 0.73 → 0.78  — Stage slides up (Y: 100% → 0%) as 100% opaque cover
-  //  p: 0.78 → 0.88  — WORKED WITH stage fully pinned; interactive 3D robot + marquee active
-  //  p: 0.88 → 0.94  — Phase A: Marquee + typography exit upward
-  //  p: 0.94 → 1.00  — Phase B: Robot screen zooms in & Contact Form reveals on robot's face
+  //  p: 0.00 → 0.800 — Offscreen (behind Project Showcase)
+  //  p: 0.800 → 0.835 — Stage slides up (Y: 100% → 0%) as 100% opaque cover
+  //  p: 0.835 → 0.900 — WORKED WITH stage fully pinned; interactive 3D robot + marquee active
+  //  p: 0.900 → 0.925 — Phase A: Marquee + Process cards exit outward/upward
+  //  p: 0.925 → 0.950 — Phase B: Robot screen zooms in & Contact Form reveals on robot's face
+  //  p: 0.950 → 0.980 — Phase C: DELAY / HOLD ZONE — Contact Form pinned & resting peacefully
   // =========================================================================
   useEffect(() => {
     if (!isPreloaderDone || !stageRef.current) return
@@ -234,11 +480,13 @@ export default function WorkedWithSection({ isPreloaderDone }) {
 
         const modelWrapper = modelWrapperRef.current
         const marqueeWrapper = marqueeWrapperRef.current
-        const titleWrapper = titleWrapperRef.current
         const formWrapper = formWrapperRef.current
+        const processLeft = processLeftRef.current
+        const processRight = processRightRef.current
+        const processBridge = processBridgeRef.current
 
         // ─── PHASE 0: Completely offscreen ─────────────────────────────────
-        if (p < 0.73) {
+        if (p < 0.80) {
           stage.style.transform = 'translateY(100%)'
           stage.style.opacity = '0'
           stage.style.visibility = 'hidden'
@@ -253,19 +501,28 @@ export default function WorkedWithSection({ isPreloaderDone }) {
             marqueeWrapper.style.transform = 'translateY(0px)'
             marqueeWrapper.style.opacity = '1'
           }
-          if (titleWrapper) {
-            titleWrapper.style.transform = 'translate(-50%, -50%)'
-            titleWrapper.style.opacity = '1'
+          if (processBridge) {
+            processBridge.style.opacity = '0'
           }
           if (formWrapper) {
             formWrapper.style.opacity = '0'
             formWrapper.style.transform = 'translate(-50%, calc(-50% + 30px)) scale(0.92)'
             formWrapper.style.pointerEvents = 'none'
           }
+          if (processLeft) {
+            processLeft.style.opacity = '0'
+            processLeft.style.transform = 'translateY(calc(-50% + 40px))'
+            processLeft.style.pointerEvents = 'none'
+          }
+          if (processRight) {
+            processRight.style.opacity = '0'
+            processRight.style.transform = 'translateY(calc(-50% + 40px))'
+            processRight.style.pointerEvents = 'none'
+          }
 
         // ─── PHASE 1: Slide-up curtain over Project Showcase ───────────────
-        } else if (p <= 0.78) {
-          const t = (p - 0.73) / 0.05
+        } else if (p <= 0.835) {
+          const t = (p - 0.80) / 0.035
           const eased = 1 - Math.pow(1 - t, 2.5)
           const translateY = (100 * (1 - eased)).toFixed(2)
 
@@ -283,18 +540,27 @@ export default function WorkedWithSection({ isPreloaderDone }) {
             marqueeWrapper.style.transform = 'translateY(0px)'
             marqueeWrapper.style.opacity = '1'
           }
-          if (titleWrapper) {
-            titleWrapper.style.transform = 'translate(-50%, -50%)'
-            titleWrapper.style.opacity = '1'
+          if (processBridge) {
+            processBridge.style.opacity = eased.toFixed(3)
           }
           if (formWrapper) {
             formWrapper.style.opacity = '0'
             formWrapper.style.transform = 'translate(-50%, calc(-50% + 30px)) scale(0.92)'
             formWrapper.style.pointerEvents = 'none'
           }
+          if (processLeft) {
+            processLeft.style.opacity = eased.toFixed(3)
+            processLeft.style.transform = `translateY(calc(-50% + ${(40 * (1 - eased)).toFixed(1)}px))`
+            processLeft.style.pointerEvents = t > 0.5 ? 'auto' : 'none'
+          }
+          if (processRight) {
+            processRight.style.opacity = eased.toFixed(3)
+            processRight.style.transform = `translateY(calc(-50% + ${(40 * (1 - eased)).toFixed(1)}px))`
+            processRight.style.pointerEvents = t > 0.5 ? 'auto' : 'none'
+          }
 
-        // ─── PHASE 2: Stage pinned — interactive 3D robot + marquee ────────
-        } else if (p <= 0.88) {
+        // ─── PHASE 2: Stage pinned — interactive 3D robot + marquee + process ──
+        } else if (p <= 0.900) {
           stage.style.transform = 'translateY(0%)'
           stage.style.opacity = '1'
           stage.style.visibility = 'visible'
@@ -309,19 +575,28 @@ export default function WorkedWithSection({ isPreloaderDone }) {
             marqueeWrapper.style.transform = 'translateY(0px)'
             marqueeWrapper.style.opacity = '1'
           }
-          if (titleWrapper) {
-            titleWrapper.style.transform = 'translate(-50%, -50%)'
-            titleWrapper.style.opacity = '1'
+          if (processBridge) {
+            processBridge.style.opacity = '1'
           }
           if (formWrapper) {
             formWrapper.style.opacity = '0'
             formWrapper.style.transform = 'translate(-50%, calc(-50% + 30px)) scale(0.92)'
             formWrapper.style.pointerEvents = 'none'
           }
+          if (processLeft) {
+            processLeft.style.opacity = '1'
+            processLeft.style.transform = 'translateY(-50%)'
+            processLeft.style.pointerEvents = 'auto'
+          }
+          if (processRight) {
+            processRight.style.opacity = '1'
+            processRight.style.transform = 'translateY(-50%)'
+            processRight.style.pointerEvents = 'auto'
+          }
 
-        // ─── PHASE A: UI Dismissal (Marquee + Title exit up) ──────────────
-        } else if (p <= 0.91) {
-          const t = (p - 0.86) / 0.05
+        // ─── PHASE A: UI Dismissal (Marquee + Title + Process exit) ───────────
+        } else if (p <= 0.925) {
+          const t = (p - 0.900) / 0.025
           const hermite = t * t * (3 - 2 * t)  // smooth hermite ease
 
           stage.style.transform = 'translateY(0%)'
@@ -337,12 +612,21 @@ export default function WorkedWithSection({ isPreloaderDone }) {
             marqueeWrapper.style.opacity = marqueeOp
           }
 
-          // Typography also exits upward
-          const titleExitY = -(hermite * 80).toFixed(1)
-          const titleOp = Math.max(0, 1 - hermite * 2.5).toFixed(3)
-          if (titleWrapper) {
-            titleWrapper.style.transform = `translate(-50%, calc(-50% + ${titleExitY}px))`
-            titleWrapper.style.opacity = titleOp
+          // Process cards slide outward and fade smoothly
+          const procExitX = (hermite * 120).toFixed(1)
+          const procOp = Math.max(0, 1 - hermite * 2.2).toFixed(3)
+          if (processLeft) {
+            processLeft.style.transform = `translate(-${procExitX}px, -50%)`
+            processLeft.style.opacity = procOp
+            processLeft.style.pointerEvents = 'none'
+          }
+          if (processRight) {
+            processRight.style.transform = `translate(${procExitX}px, -50%)`
+            processRight.style.opacity = procOp
+            processRight.style.pointerEvents = 'none'
+          }
+          if (processBridge) {
+            processBridge.style.opacity = procOp
           }
 
           if (modelWrapper) {
@@ -356,9 +640,9 @@ export default function WorkedWithSection({ isPreloaderDone }) {
             formWrapper.style.pointerEvents = 'none'
           }
 
-        // ─── PHASE B: Robot Screen Zoom & Contact Form Reveal on Face ───────
+        // ─── PHASE B & C: Robot Screen Zoom (p: 0.925 → 0.950) & HOLD DELAY (p: 0.950 → 0.980) ───
         } else {
-          const rawT = (p - 0.91) / 0.04
+          const rawT = (p - 0.925) / 0.025
           const t = Math.min(1.0, Math.max(0, rawT))
           const zoomEase = t * (2 - t)  // smooth ease-out
 
@@ -367,13 +651,21 @@ export default function WorkedWithSection({ isPreloaderDone }) {
           stage.style.visibility = 'visible'
           stage.style.pointerEvents = 'auto'
 
-          // Marquee and title stay hidden
+          // Marquee and bridge stay hidden
           if (marqueeWrapper) {
             marqueeWrapper.style.transform = 'translateY(-110px)'
             marqueeWrapper.style.opacity = '0'
           }
-          if (titleWrapper) {
-            titleWrapper.style.opacity = '0'
+          if (processBridge) {
+            processBridge.style.opacity = '0'
+          }
+          if (processLeft) {
+            processLeft.style.opacity = '0'
+            processLeft.style.pointerEvents = 'none'
+          }
+          if (processRight) {
+            processRight.style.opacity = '0'
+            processRight.style.pointerEvents = 'none'
           }
 
           // Robot face zoom: scale 0.84 → 3.88
@@ -455,41 +747,6 @@ export default function WorkedWithSection({ isPreloaderDone }) {
         }}
       />
 
-      {/* ========================================================================= */}
-      {/* LAYER 1: GIANT "WORKED WITH" TYPOGRAPHY BEHIND THE 3D ROBOT              */}
-      {/* ========================================================================= */}
-      <div
-        ref={titleWrapperRef}
-        style={{
-          position: 'absolute',
-          top: '36%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '100vw',
-          textAlign: 'center',
-          zIndex: 1, // Sits BEHIND the Spline 3D canvas (z-index 2)
-          pointerEvents: 'none',
-          userSelect: 'none',
-          willChange: 'transform, opacity',
-        }}
-      >
-        <h2
-          style={{
-            fontFamily: "'Outfit', 'Space Grotesk', sans-serif",
-            fontSize: 'clamp(64px, 12.5vw, 210px)',
-            fontWeight: 900,
-            letterSpacing: '-0.03em',
-            lineHeight: 0.9,
-            margin: 0,
-            textTransform: 'uppercase',
-            whiteSpace: 'nowrap',
-            color: 'rgba(255, 255, 255, 0.12)',
-            textShadow: '0 0 80px rgba(168, 85, 247, 0.25)',
-          }}
-        >
-          WORKED <span style={{ color: 'rgba(168, 85, 247, 0.35)', textShadow: '0 0 100px rgba(168, 85, 247, 0.6)' }}>WITH</span>
-        </h2>
-      </div>
 
       {/* ========================================================================= */}
       {/* LAYER 2: INTERACTIVE SPLINE 3D ROBOT CANVAS (Sits in front of text)       */}
@@ -642,6 +899,159 @@ export default function WorkedWithSection({ isPreloaderDone }) {
       </div>
 
       {/* ========================================================================= */}
+      {/* LAYER 3.5: 4-STAGE PROCESS FRAMEWORK (Sides & Behind the 3D Robot)        */}
+      {/* ========================================================================= */}
+      {/* CENTRAL DATA CONDUIT BEHIND 3D ROBOT (Connects Step 02 to Step 03) */}
+      <div
+        ref={processBridgeRef}
+        className="process-bridge-conduit"
+        style={{
+          position: 'absolute',
+          left: 'calc(50% - clamp(140px, 11.5vw, 185px))',
+          right: 'calc(50% - clamp(140px, 11.5vw, 185px))',
+          top: '52%',
+          transform: 'translateY(-50%)',
+          height: '24px',
+          zIndex: 1, // Sits directly BEHIND the Spline 3D canvas (z-index 2)
+          pointerEvents: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          willChange: 'opacity',
+        }}
+      >
+        {/* Glowing conduit line */}
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '1.5px',
+            background: 'linear-gradient(90deg, rgba(168, 85, 247, 0.45) 0%, rgba(192, 132, 252, 0.85) 50%, rgba(168, 85, 247, 0.5) 100%)',
+            boxShadow: '0 0 10px rgba(168, 85, 247, 0.45), 0 0 20px rgba(192, 132, 252, 0.25)',
+          }}
+        >
+          {/* Animated traveling energy pulse */}
+          <div
+            className="conduit-traveling-pulse"
+            style={{
+              position: 'absolute',
+              top: '-3px',
+              left: '0%',
+              width: '32px',
+              height: '7px',
+              borderRadius: '7px',
+              background: 'radial-gradient(ellipse at center, #ffffff 0%, #c084fc 60%, transparent 100%)',
+              boxShadow: '0 0 14px #c084fc, 0 0 24px #a855f7',
+              animation: 'conduitTravel 3.2s ease-in-out infinite',
+            }}
+          />
+        </div>
+
+        {/* Arrowhead pointing into Step 03 */}
+        <svg
+          width="8"
+          height="12"
+          viewBox="0 0 8 12"
+          fill="none"
+          style={{
+            position: 'absolute',
+            right: '-2px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+          }}
+        >
+          <path d="M1.5 2L5.5 6L1.5 10" stroke="#c084fc" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+
+      {/* LEFT PROCESS GROUP: 01 DISCOVER -> 02 DESIGN */}
+      <div
+        ref={processLeftRef}
+        className="process-side-group process-side-group-left"
+        style={{
+          position: 'absolute',
+          right: 'calc(50% + clamp(140px, 11.5vw, 185px))',
+          top: '52%',
+          transform: 'translateY(-50%)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'clamp(6px, 1vw, 14px)',
+          zIndex: 15,
+          pointerEvents: 'auto',
+          willChange: 'transform, opacity',
+        }}
+      >
+        <ProcessCard
+          step={PROCESS_STEPS[0]}
+          isHovered={activeHoveredStep === '01'}
+          onHover={() => {
+            setActiveHoveredStep('01')
+            hoveredProcessStepRef.current = PROCESS_STEPS[0].lookAt
+          }}
+          onLeave={() => {
+            setActiveHoveredStep(null)
+            hoveredProcessStepRef.current = null
+          }}
+        />
+        <ProcessConnector />
+        <ProcessCard
+          step={PROCESS_STEPS[1]}
+          isHovered={activeHoveredStep === '02'}
+          onHover={() => {
+            setActiveHoveredStep('02')
+            hoveredProcessStepRef.current = PROCESS_STEPS[1].lookAt
+          }}
+          onLeave={() => {
+            setActiveHoveredStep(null)
+            hoveredProcessStepRef.current = null
+          }}
+        />
+      </div>
+
+      {/* RIGHT PROCESS GROUP: 03 BUILD -> 04 LAUNCH */}
+      <div
+        ref={processRightRef}
+        className="process-side-group process-side-group-right"
+        style={{
+          position: 'absolute',
+          left: 'calc(50% + clamp(140px, 11.5vw, 185px))',
+          top: '52%',
+          transform: 'translateY(-50%)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'clamp(6px, 1vw, 14px)',
+          zIndex: 15,
+          pointerEvents: 'auto',
+          willChange: 'transform, opacity',
+        }}
+      >
+        <ProcessCard
+          step={PROCESS_STEPS[2]}
+          isHovered={activeHoveredStep === '03'}
+          onHover={() => {
+            setActiveHoveredStep('03')
+            hoveredProcessStepRef.current = PROCESS_STEPS[2].lookAt
+          }}
+          onLeave={() => {
+            setActiveHoveredStep(null)
+            hoveredProcessStepRef.current = null
+          }}
+        />
+        <ProcessConnector />
+        <ProcessCard
+          step={PROCESS_STEPS[3]}
+          isHovered={activeHoveredStep === '04'}
+          onHover={() => {
+            setActiveHoveredStep('04')
+            hoveredProcessStepRef.current = PROCESS_STEPS[3].lookAt
+          }}
+          onLeave={() => {
+            setActiveHoveredStep(null)
+            hoveredProcessStepRef.current = null
+          }}
+        />
+      </div>
+
+      {/* ========================================================================= */}
       {/* LAYER 4: ROBOT MONITOR SCREEN DISPLAY — INTERACTIVE CONTACT US FORM       */}
       {/* ========================================================================= */}
       <div
@@ -672,11 +1082,11 @@ export default function WorkedWithSection({ isPreloaderDone }) {
             backgroundColor: '#07071c',
             background: 'radial-gradient(135% 100% at 50% 0%, #1c113e 0%, #0d0a27 45%, #060618 100%)',
             border: '1px solid rgba(168, 85, 247, 0.42)',
-            borderRadius: 'clamp(24px, 3.5vw, 40px)',
+            borderRadius: 'clamp(22px, 3vw, 36px)',
             boxShadow: '0 24px 80px rgba(0, 0, 0, 0.95), 0 0 60px rgba(139, 92, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
-            padding: 'clamp(22px, 3.4vh, 38px) clamp(22px, 3.8vw, 46px)',
+            padding: 'clamp(18px, 2.6vh, 30px) clamp(22px, 3.4vw, 42px)',
             overflowY: 'auto',
-            maxHeight: '82vh',
+            maxHeight: '80vh',
             boxSizing: 'border-box',
             willChange: 'transform',
           }}
@@ -694,67 +1104,30 @@ export default function WorkedWithSection({ isPreloaderDone }) {
             }}
           />
 
-          {/* Top Status Header */}
-          <div
-            style={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingBottom: '14px',
-              marginBottom: '16px',
-              borderBottom: '1px solid rgba(168, 85, 247, 0.22)',
-              fontFamily: "'Space Grotesk', monospace",
-              fontSize: '11px',
-              letterSpacing: '0.18em',
-              color: 'rgba(192, 132, 252, 0.9)',
-              zIndex: 1,
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span
-                style={{
-                  width: '7px',
-                  height: '7px',
-                  borderRadius: '50%',
-                  background: '#a855f7',
-                  boxShadow: '0 0 10px #a855f7, 0 0 20px #ec4899',
-                  animation: 'pulseGlow 2s infinite',
-                }}
-              />
-              NEURAL INTERFACE // READY
-            </div>
-            <div style={{ color: 'rgba(255, 255, 255, 0.45)', fontSize: '10px' }}>
-              SYS.LOC: KOLKATA [22.57° N]
-            </div>
-          </div>
-
           {/* Screen Title & Subtitle */}
-          <div style={{ position: 'relative', marginBottom: '20px', zIndex: 1 }}>
+          <div style={{ position: 'relative', marginBottom: '18px', zIndex: 1 }}>
             <h3
               style={{
                 fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif",
-                fontSize: 'clamp(24px, 3vw, 34px)',
+                fontSize: 'clamp(22px, 2.8vw, 32px)',
                 fontWeight: 800,
                 letterSpacing: '-0.02em',
                 margin: '0 0 6px 0',
-                background: 'linear-gradient(135deg, #ffffff 0%, #d8b4fe 50%, #f472b6 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                color: '#ffffff',
               }}
             >
-              INITIALIZE TRANSMISSION
+              Start a New Project
             </h3>
             <p
               style={{
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontSize: 'clamp(12px, 1.2vw, 14px)',
+                fontSize: 'clamp(12.5px, 1.05vw, 14px)',
                 color: 'rgba(255, 255, 255, 0.65)',
                 margin: 0,
-                lineHeight: 1.4,
+                lineHeight: 1.45,
               }}
             >
-              Have a visionary project? Transmit your directive directly to our core.
+              Share a few details and we'll take care of the rest.
             </p>
           </div>
 
@@ -767,16 +1140,16 @@ export default function WorkedWithSection({ isPreloaderDone }) {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '36px 16px',
+                padding: '30px 16px',
                 textAlign: 'center',
-                gap: '14px',
+                gap: '12px',
                 zIndex: 1,
               }}
             >
               <div
                 style={{
-                  width: '58px',
-                  height: '58px',
+                  width: '54px',
+                  height: '54px',
                   borderRadius: '50%',
                   background: '#130d2d',
                   border: '1px solid rgba(168, 85, 247, 0.6)',
@@ -786,32 +1159,32 @@ export default function WorkedWithSection({ isPreloaderDone }) {
                   boxShadow: '0 0 30px rgba(168, 85, 247, 0.4)',
                 }}
               >
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d8b4fe" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d8b4fe" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
               <h4
                 style={{
                   fontFamily: "'Outfit', sans-serif",
-                  fontSize: '22px',
+                  fontSize: '20px',
                   fontWeight: 700,
                   color: '#ffffff',
                   margin: 0,
                 }}
               >
-                TRANSMISSION ENCRYPTED & RECEIVED
+                Project Brief Received!
               </h4>
               <p
                 style={{
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontSize: '13px',
+                  fontSize: '12.5px',
                   color: 'rgba(255, 255, 255, 0.65)',
                   maxWidth: '380px',
                   margin: 0,
-                  lineHeight: 1.5,
+                  lineHeight: 1.45,
                 }}
               >
-                Your transmission has been linked to our neural network. Our architects will contact you within 24 hours.
+                Thank you for sharing your project details. Our team will review your requirements and get back to you within 24 hours.
               </p>
               <button
                 type="button"
@@ -820,14 +1193,15 @@ export default function WorkedWithSection({ isPreloaderDone }) {
                   setFormData({ name: '', email: '', message: '', selectedServices: ['3D Web Experiences'] })
                 }}
                 style={{
-                  marginTop: '10px',
-                  padding: '10px 22px',
-                  borderRadius: '12px',
+                  marginTop: '8px',
+                  padding: '11px 22px',
+                  borderRadius: '11px',
                   border: '1px solid rgba(168, 85, 247, 0.5)',
                   background: '#150f33',
                   color: '#d8b4fe',
                   fontFamily: "'Space Grotesk', monospace",
                   fontSize: '11px',
+                  fontWeight: 600,
                   letterSpacing: '0.14em',
                   cursor: 'pointer',
                   transition: 'all 0.25s ease',
@@ -841,44 +1215,45 @@ export default function WorkedWithSection({ isPreloaderDone }) {
                   e.currentTarget.style.boxShadow = 'none'
                 }}
               >
-                TRANSMIT ANOTHER MESSAGE
+                SUBMIT ANOTHER BRIEF
               </button>
             </div>
           ) : (
             /* Main Form */
-            <form onSubmit={handleSubmit} style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '16px', zIndex: 1 }}>
+            <form onSubmit={handleSubmit} style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '13px', zIndex: 1 }}>
               {/* Row 1: Name & Email */}
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                  gap: '16px',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                  gap: '14px',
                 }}
               >
-                {/* Identifier / Name */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {/* NAME */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                   <label
                     style={{
                       fontFamily: "'Space Grotesk', monospace",
-                      fontSize: '10px',
-                      letterSpacing: '0.16em',
-                      color: 'rgba(192, 132, 252, 0.9)',
+                      fontSize: '10.5px',
+                      fontWeight: 700,
+                      letterSpacing: '0.12em',
+                      color: 'rgba(255, 255, 255, 0.85)',
                       textTransform: 'uppercase',
                     }}
                   >
-                    IDENTIFIER / NAME
+                    NAME
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Enter your name"
+                    placeholder="Your name"
                     style={{
-                      padding: '13px 16px',
-                      borderRadius: '12px',
-                      background: '#0a081e',
-                      border: '1px solid rgba(168, 85, 247, 0.3)',
+                      padding: '11px 16px',
+                      borderRadius: '11px',
+                      background: 'rgba(8, 6, 24, 0.75)',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
                       color: '#ffffff',
                       fontFamily: "'Plus Jakarta Sans', sans-serif",
                       fontSize: '13px',
@@ -886,28 +1261,29 @@ export default function WorkedWithSection({ isPreloaderDone }) {
                       transition: 'border-color 0.25s ease, box-shadow 0.25s ease',
                     }}
                     onFocus={(e) => {
-                      e.target.style.borderColor = '#a855f7'
+                      e.target.style.borderColor = '#c084fc'
                       e.target.style.boxShadow = '0 0 16px rgba(168, 85, 247, 0.35)'
                     }}
                     onBlur={(e) => {
-                      e.target.style.borderColor = 'rgba(168, 85, 247, 0.3)'
+                      e.target.style.borderColor = 'rgba(255, 255, 255, 0.12)'
                       e.target.style.boxShadow = 'none'
                     }}
                   />
                 </div>
 
-                {/* Comms / Email */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {/* EMAIL */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                   <label
                     style={{
                       fontFamily: "'Space Grotesk', monospace",
-                      fontSize: '10px',
-                      letterSpacing: '0.16em',
-                      color: 'rgba(192, 132, 252, 0.9)',
+                      fontSize: '10.5px',
+                      fontWeight: 700,
+                      letterSpacing: '0.12em',
+                      color: 'rgba(255, 255, 255, 0.85)',
                       textTransform: 'uppercase',
                     }}
                   >
-                    COMMS / EMAIL
+                    EMAIL
                   </label>
                   <input
                     type="email"
@@ -916,10 +1292,10 @@ export default function WorkedWithSection({ isPreloaderDone }) {
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="name@organization.com"
                     style={{
-                      padding: '13px 16px',
-                      borderRadius: '12px',
-                      background: '#0a081e',
-                      border: '1px solid rgba(168, 85, 247, 0.3)',
+                      padding: '11px 16px',
+                      borderRadius: '11px',
+                      background: 'rgba(8, 6, 24, 0.75)',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
                       color: '#ffffff',
                       fontFamily: "'Plus Jakarta Sans', sans-serif",
                       fontSize: '13px',
@@ -927,11 +1303,11 @@ export default function WorkedWithSection({ isPreloaderDone }) {
                       transition: 'border-color 0.25s ease, box-shadow 0.25s ease',
                     }}
                     onFocus={(e) => {
-                      e.target.style.borderColor = '#a855f7'
+                      e.target.style.borderColor = '#c084fc'
                       e.target.style.boxShadow = '0 0 16px rgba(168, 85, 247, 0.35)'
                     }}
                     onBlur={(e) => {
-                      e.target.style.borderColor = 'rgba(168, 85, 247, 0.3)'
+                      e.target.style.borderColor = 'rgba(255, 255, 255, 0.12)'
                       e.target.style.boxShadow = 'none'
                     }}
                   />
@@ -939,19 +1315,20 @@ export default function WorkedWithSection({ isPreloaderDone }) {
               </div>
 
               {/* Row 2: Service Selection Pills */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <label
                   style={{
                     fontFamily: "'Space Grotesk', monospace",
-                    fontSize: '10px',
-                    letterSpacing: '0.16em',
-                    color: 'rgba(192, 132, 252, 0.9)',
+                    fontSize: '10.5px',
+                    fontWeight: 700,
+                    letterSpacing: '0.12em',
+                    color: 'rgba(192, 132, 252, 0.95)',
                     textTransform: 'uppercase',
                   }}
                 >
                   TARGET SCOPE / EXPERTISE
                 </label>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px' }}>
                   {SERVICES.map((service) => {
                     const isSelected = formData.selectedServices.includes(service)
                     return (
@@ -960,24 +1337,24 @@ export default function WorkedWithSection({ isPreloaderDone }) {
                         type="button"
                         onClick={() => toggleService(service)}
                         style={{
-                          padding: '8px 16px',
+                          padding: '7px 16px',
                           borderRadius: '999px',
                           border: isSelected
                             ? '1px solid #c084fc'
-                            : '1px solid rgba(168, 85, 247, 0.26)',
+                            : '1px solid rgba(255, 255, 255, 0.12)',
                           background: isSelected
-                            ? 'linear-gradient(135deg, #581c87 0%, #831843 100%)'
-                            : '#0c0a22',
-                          color: isSelected ? '#ffffff' : 'rgba(255, 255, 255, 0.8)',
+                            ? 'linear-gradient(135deg, #701a75 0%, #831843 50%, #581c87 100%)'
+                            : 'rgba(10, 8, 28, 0.8)',
+                          color: isSelected ? '#ffffff' : 'rgba(255, 255, 255, 0.75)',
                           fontFamily: "'Space Grotesk', sans-serif",
-                          fontSize: '11px',
+                          fontSize: '11.5px',
                           fontWeight: 500,
                           cursor: 'pointer',
                           transition: 'all 0.25s ease',
-                          boxShadow: isSelected ? '0 0 16px rgba(168, 85, 247, 0.35)' : 'none',
+                          boxShadow: isSelected ? '0 0 20px rgba(192, 132, 252, 0.4)' : 'none',
                         }}
                       >
-                        {isSelected && <span style={{ marginRight: '5px', color: '#d8b4fe' }}>✓</span>}
+                        {isSelected && <span style={{ marginRight: '5px', color: '#f0abfc' }}>✓</span>}
                         {service}
                       </button>
                     )
@@ -985,43 +1362,46 @@ export default function WorkedWithSection({ isPreloaderDone }) {
                 </div>
               </div>
 
-              {/* Row 3: Message / Payload */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {/* Row 3: Project Brief Textarea */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                 <label
                   style={{
                     fontFamily: "'Space Grotesk', monospace",
-                    fontSize: '10px',
-                    letterSpacing: '0.16em',
-                    color: 'rgba(192, 132, 252, 0.9)',
+                    fontSize: '10.5px',
+                    fontWeight: 700,
+                    letterSpacing: '0.12em',
+                    color: 'rgba(255, 255, 255, 0.85)',
                     textTransform: 'uppercase',
                   }}
                 >
-                  TRANSMISSION PAYLOAD / MESSAGE
+                  PROJECT BRIEF
                 </label>
                 <textarea
                   rows="3"
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="Outline your vision, timeline, questions or project requirements..."
+                  placeholder="Tell us about your project..."
                   style={{
-                    padding: '13px 16px',
-                    borderRadius: '12px',
-                    background: '#0a081e',
-                    border: '1px solid rgba(168, 85, 247, 0.3)',
+                    minHeight: '68px',
+                    height: '72px',
+                    padding: '11px 16px',
+                    borderRadius: '11px',
+                    background: 'rgba(8, 6, 24, 0.75)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
                     color: '#ffffff',
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
                     fontSize: '13px',
-                    lineHeight: 1.4,
-                    resize: 'vertical',
+                    lineHeight: 1.45,
+                    resize: 'none',
                     outline: 'none',
                     transition: 'border-color 0.25s ease, box-shadow 0.25s ease',
                   }}
                   onFocus={(e) => {
-                    e.target.style.borderColor = '#a855f7'
+                    e.target.style.borderColor = '#c084fc'
                     e.target.style.boxShadow = '0 0 16px rgba(168, 85, 247, 0.35)'
                   }}
                   onBlur={(e) => {
-                    e.target.style.borderColor = 'rgba(168, 85, 247, 0.3)'
+                    e.target.style.borderColor = 'rgba(255, 255, 255, 0.12)'
                     e.target.style.boxShadow = 'none'
                   }}
                 />
@@ -1033,34 +1413,34 @@ export default function WorkedWithSection({ isPreloaderDone }) {
                 disabled={isSubmitting}
                 style={{
                   marginTop: '6px',
-                  padding: '15px 32px',
-                  borderRadius: '14px',
+                  padding: '13px 26px',
+                  borderRadius: '12px',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
-                  background: 'linear-gradient(135deg, #7c3aed 0%, #6366f1 50%, #00f0ff 100%)',
+                  background: 'linear-gradient(135deg, #6366f1 0%, #7c3aed 50%, #8b5cf6 100%)',
                   color: '#ffffff',
                   fontFamily: "'Outfit', 'Space Grotesk', sans-serif",
-                  fontSize: '13px',
+                  fontSize: '12.5px',
                   fontWeight: 700,
-                  letterSpacing: '0.14em',
+                  letterSpacing: '0.12em',
                   textTransform: 'uppercase',
                   cursor: isSubmitting ? 'not-allowed' : 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  boxShadow: '0 8px 32px rgba(124, 58, 237, 0.55), 0 0 20px rgba(0, 240, 255, 0.3)',
+                  boxShadow: '0 10px 32px rgba(124, 58, 237, 0.5), 0 0 20px rgba(99, 102, 241, 0.3)',
                   transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
                   opacity: isSubmitting ? 0.75 : 1,
                 }}
                 onMouseEnter={(e) => {
                   if (!isSubmitting) {
                     e.currentTarget.style.transform = 'translateY(-2px)'
-                    e.currentTarget.style.boxShadow = '0 12px 42px rgba(124, 58, 237, 0.75), 0 0 30px rgba(0, 240, 255, 0.5)'
+                    e.currentTarget.style.boxShadow = '0 14px 40px rgba(124, 58, 237, 0.7), 0 0 28px rgba(99, 102, 241, 0.5)'
                   }
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0px)'
-                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(124, 58, 237, 0.55), 0 0 20px rgba(0, 240, 255, 0.3)'
+                  e.currentTarget.style.boxShadow = '0 10px 32px rgba(124, 58, 237, 0.5), 0 0 20px rgba(99, 102, 241, 0.3)'
                 }}
               >
                 {isSubmitting ? (
@@ -1075,15 +1455,25 @@ export default function WorkedWithSection({ isPreloaderDone }) {
                         animation: 'spin 0.8s linear infinite',
                       }}
                     />
-                    TRANSMITTING PAYLOAD...
+                    SENDING PROJECT BRIEF...
                   </>
                 ) : (
                   <>
-                    TRANSMIT DIRECTIVE
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="22" y1="2" x2="11" y2="13" />
-                      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    <svg
+                      width="17"
+                      height="17"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      style={{ transform: 'rotate(-10deg) translateY(-1px)' }}
+                    >
+                      <path d="m22 2-7 20-4-9-9-4Z" />
+                      <path d="M22 2 11 13" />
                     </svg>
+                    SEND PROJECT BRIEF
                   </>
                 )}
               </button>
@@ -1092,7 +1482,7 @@ export default function WorkedWithSection({ isPreloaderDone }) {
         </div>
       </div>
 
-      {/* Marquee, Pulsing and Spinner Keyframes */}
+      {/* Marquee, Pulsing and Responsive Keyframes */}
       <style>{`
         @keyframes marqueeScroll {
           0% {
@@ -1117,6 +1507,58 @@ export default function WorkedWithSection({ isPreloaderDone }) {
           50% {
             opacity: 0.6;
             transform: scale(1.3);
+          }
+        }
+        @keyframes conduitTravel {
+          0% {
+            left: 0%;
+            opacity: 0;
+          }
+          15% {
+            opacity: 1;
+          }
+          85% {
+            opacity: 1;
+          }
+          100% {
+            left: calc(100% - 32px);
+            opacity: 0;
+          }
+        }
+        @media (max-width: 1280px) {
+          .process-card-item {
+            width: clamp(150px, 11vw, 175px) !important;
+            min-height: 220px !important;
+            padding: 14px 10px !important;
+          }
+        }
+        @media (max-width: 980px) {
+          .process-bridge-conduit {
+            display: none !important;
+          }
+          .process-side-group {
+            flex-direction: column !important;
+            gap: 8px !important;
+          }
+          .process-side-group-left {
+            right: calc(50% + clamp(110px, 16vw, 150px)) !important;
+          }
+          .process-side-group-right {
+            left: calc(50% + clamp(110px, 16vw, 150px)) !important;
+          }
+          .process-connector-arrow {
+            transform: rotate(90deg) !important;
+            height: 16px !important;
+          }
+          .process-card-item {
+            width: 170px !important;
+            min-height: auto !important;
+            padding: 14px 10px !important;
+          }
+        }
+        @media (max-width: 720px) {
+          .process-side-group {
+            display: none !important;
           }
         }
       `}</style>

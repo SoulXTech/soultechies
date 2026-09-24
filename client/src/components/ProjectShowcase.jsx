@@ -1,49 +1,79 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import gsap from 'gsap'
-import { ExternalLink, ArrowLeft, ArrowRight } from 'lucide-react'
+import { ExternalLink, ArrowLeft, ArrowRight, Play, Pause } from 'lucide-react'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export const projectsData = [
   {
     id: 1,
-    title: 'PRIME TOWER',
+    title: 'FACE RECOGNITION ATTENDANCE',
     year: '2025',
-    category: 'Commercial Architecture',
-    description: 'A 45-story commercial high-rise in the business district, featuring a sustainable double-skin facade and a sky garden bridging two kinetic volumes.',
-    tags: ['Sustainable Design', 'Glass Facade', 'Urban Integration'],
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+    category: 'Mobile Application',
+    description: 'A Flutter-based employee attendance system that uses face recognition to identify employees and automatically record attendance. It includes employee registration, face capture, authentication, attendance marking, and attendance history. The app is integrated with Firebase for cloud data synchronization.',
+    tags: ['Flutter', 'Dart', 'Firebase', 'Face Recognition', 'REST API', 'Android Studio', 'Git'],
+    image: '/projects/attandance.jpeg',
     link: '#',
   },
   {
     id: 2,
-    title: 'THE AXEL',
+    title: 'DREAM INK — BILLING SYSTEM',
     year: '2024',
-    category: 'Mixed-Use Spatial',
-    description: 'Curved parametric facade structures that redefine the city skyline. Intersecting circular floor plans create dynamic internal courtyards and fluid public spaces.',
-    tags: ['Parametric Design', 'Public Space', 'Mixed-Use'],
-    image: 'https://images.unsplash.com/photo-1527576539890-dfa815648363?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+    category: 'Software / Business Utility',
+    description: 'A professional billing and studio management application designed for Dream Ink Tattoos & Makeover Studio to create and manage invoices. The system supports customer profiles, expense tracking, thermal printing, GST calculations, product/service entries, automated totals and invoice generation.',
+    tags: ['Flutter', 'Thermal Printer', 'Invoice Engine', 'GST Calculation', 'Client Management'],
+    image: '/projects/dream%20ink.jpeg',
     link: '#',
   },
   {
     id: 3,
-    title: 'MODERNIST PAVILION',
-    year: '2023',
-    category: 'Cultural Center',
-    description: 'A minimalist white cement structure contrasting against natural landscapes. Designed as a seamless flow between interior gallery spaces and exterior sculpture gardens.',
-    tags: ['Minimalism', 'Cast Concrete', 'Cultural Space'],
-    image: 'https://images.unsplash.com/photo-1479839672679-a46483c0e7c8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+    title: 'HOPZY.IN TRAVEL PLATFORM',
+    year: '2024',
+    category: 'Full-Stack Travel Platform',
+    description: 'A modern online bus booking platform where users can search routes, explore available buses, check schedules and book journeys. Engineered professionally across frontend and backend systems, including booking APIs, passenger records, ticketing, seat selection, availability and cancellations.',
+    tags: ['React.js', 'Tailwind CSS', 'Node.js', 'Express.js', 'REST APIs', 'Git'],
+    image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
     link: '#',
   },
   {
     id: 4,
-    title: 'NEXUS SPATIAL LAB',
+    title: 'CAR HUNT — CAR RENTAL',
+    year: '2024',
+    category: 'Full-Stack Web Application',
+    description: 'A full-stack car rental and fleet management platform designed for browsing vehicles, managing inventory, calculating rental pricing and handling reservations. The system includes customer/admin workflows, authentication, role-based access control, vehicle inventory, reservations and rental tracking.',
+    tags: ['React.js', 'Tailwind CSS', 'Node.js', 'JavaScript', 'Google Maps API'],
+    image: '/projects/car%20hunt.png',
+    link: '#',
+  },
+  {
+    id: 5,
+    title: 'AI RESUME BUILDER & STUDIO',
     year: '2025',
-    category: 'Cybernetic Tech',
-    description: 'A futuristic research facility integrating holographic spatial interfaces, adaptive kinetic facade shading, and relativistic real-time computing pipelines.',
-    tags: ['Spatial Computing', 'Kinetic Shading', 'Net Zero'],
-    image: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+    category: 'Full-Stack Web Application',
+    description: 'A modern resume-building platform designed to help users create clean, structured and ATS-friendly resumes. It provides real-time editing and PDF generation, making it suitable for job seekers who want to quickly create professional resumes.',
+    tags: ['React.js', 'Tailwind CSS', 'Node.js', 'JavaScript', 'PDF Generation', 'ATS Optimization'],
+    image: '/projects/ai%20resume%20builder.png',
+    link: '#',
+  },
+  {
+    id: 6,
+    title: 'BUDGET NINJA — EXPENSE TRACKER',
+    year: '2023',
+    category: 'Full-Stack / Financial Management',
+    description: 'An expense-tracking application for managing personal income, expenses and budgets. It includes categorization, budget planning, transaction management, financial reporting and an interactive analytics dashboard.',
+    tags: ['React.js', 'JavaScript', 'Firebase', 'Tailwind CSS', 'Cloud Sync', 'Analytics Dashboard'],
+    image: '/projects/budgetninja.png',
+    link: '#',
+  },
+  {
+    id: 7,
+    title: 'NINJARO — E-COMMERCE WEBSITE',
+    year: '2024',
+    category: 'E-commerce / Brand Website',
+    description: 'A modern e-commerce website developed for Ninjaro, a premium botanical mocktail premix brand. The website presents the product collection through a visually rich storefront and guides customers through the simple preparation process. It includes product discovery, search, special offers, shopping cart functionality, customer reviews, and responsive sections for the brand story and product experience.',
+    tags: ['React.js', 'Node.js', 'MongoDB', 'Tailwind CSS', 'PayU / Razorpay', 'E-commerce Platform'],
+    image: '/projects/ninjaro.png',
     link: '#',
   },
 ]
@@ -54,7 +84,7 @@ const EXTENDED_PROJECTS = [
   ...projectsData,
   ...projectsData,
 ]
-const N = projectsData.length // 4
+const N = projectsData.length
 
 export default function ProjectShowcase({ isPreloaderDone }) {
   const containerRef = useRef(null)
@@ -63,8 +93,16 @@ export default function ProjectShowcase({ isPreloaderDone }) {
   const topMetaRef = useRef(null)
   const textContentRef = useRef(null)
 
-  const [virtualIndex, setVirtualIndex] = useState(4) // Start at index 4 (first item in middle set)
+  const [virtualIndex, setVirtualIndex] = useState(N) // Start at index N (first item in middle set)
   const [isAnimating, setIsAnimating] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(true)
+
+  const isPlayingRef = useRef(true)
+  const isHoveredRef = useRef(false)
+  const isSectionVisibleRef = useRef(false)
+  const isAnimatingRef = useRef(false)
+  const autoPlayTimerRef = useRef(null)
+  const handleNavigateRef = useRef(null)
 
   const currentIndex = ((virtualIndex % N) + N) % N
   const currentProject = projectsData[currentIndex]
@@ -95,10 +133,29 @@ export default function ProjectShowcase({ isPreloaderDone }) {
     return () => window.removeEventListener('resize', handleResize)
   }, [virtualIndex, isAnimating])
 
+  // Reset auto-play slideshow countdown
+  const resetAutoPlayTimer = useCallback(() => {
+    if (autoPlayTimerRef.current) clearInterval(autoPlayTimerRef.current)
+    if (!isPlayingRef.current) return
+
+    autoPlayTimerRef.current = setInterval(() => {
+      if (
+        isPlayingRef.current &&
+        isSectionVisibleRef.current &&
+        !isHoveredRef.current &&
+        !isAnimatingRef.current
+      ) {
+        handleNavigateRef.current?.(1)
+      }
+    }, 3500)
+  }, [])
+
   // Sequential, seamless vertical track sliding handler
   const handleNavigate = (dir) => {
-    if (isAnimating || !trackRef.current) return
+    if (isAnimatingRef.current || !trackRef.current) return
+    isAnimatingRef.current = true
     setIsAnimating(true)
+    resetAutoPlayTimer()
 
     const nextVIdx = virtualIndex + dir
     const targetY = getTrackY(nextVIdx)
@@ -140,11 +197,11 @@ export default function ProjectShowcase({ isPreloaderDone }) {
       duration: 0.68,
       ease: 'power3.inOut',
       onComplete: () => {
-        // Seamless loop normalization: keep index in the middle set [4..7]
+        // Seamless loop normalization: keep index in the middle set [N..2N-1]
         let normalized = nextVIdx
-        if (normalized >= 8) {
+        if (normalized >= 2 * N) {
           normalized -= N
-        } else if (normalized < 4) {
+        } else if (normalized < N) {
           normalized += N
         }
 
@@ -153,45 +210,58 @@ export default function ProjectShowcase({ isPreloaderDone }) {
           gsap.set(trackRef.current, { y: getTrackY(normalized) })
         }
         setIsAnimating(false)
+        isAnimatingRef.current = false
       },
     })
   }
 
-  // Scroll Trigger Reveal (960vh timeline): enters at p >= 0.582, fully visible & interactive at p >= 0.650
+  handleNavigateRef.current = handleNavigate
+
+  // Mount & cleanup auto-play timer
+  useEffect(() => {
+    if (!isPreloaderDone) return
+    resetAutoPlayTimer()
+    return () => {
+      if (autoPlayTimerRef.current) clearInterval(autoPlayTimerRef.current)
+    }
+  }, [isPreloaderDone, resetAutoPlayTimer])
+
+  // Scroll Trigger Reveal (1380vh timeline): enters at p >= 0.550, fully visible & interactive at 0.610 <= p < 0.810
   useEffect(() => {
     if (!isPreloaderDone || !containerRef.current) return
 
     const el = containerRef.current
+
+    const updateProgress = (p) => {
+      isSectionVisibleRef.current = p >= 0.550 && p < 0.810
+
+      if (p < 0.550) {
+        el.style.opacity = '0'
+        el.style.pointerEvents = 'none'
+        el.style.transform = 'translateY(36px)'
+      } else if (p <= 0.610) {
+        const t = (p - 0.550) / 0.060
+        const eased = t * (2 - t) // ease-out
+        el.style.opacity = eased.toFixed(4)
+        el.style.pointerEvents = eased > 0.4 ? 'auto' : 'none'
+        el.style.transform = `translateY(${(36 * (1 - eased)).toFixed(1)}px)`
+      } else {
+        el.style.opacity = '1'
+        el.style.pointerEvents = p < 0.820 ? 'auto' : 'none'
+        el.style.transform = 'translateY(0px)'
+      }
+    }
 
     const st = ScrollTrigger.create({
       trigger: document.body,
       start: 'top top',
       end: 'bottom bottom',
       scrub: true,
-      onUpdate: (self) => {
-        const p = self.progress
-
-        // p < 0.582: completely hidden
-        // p 0.582 -> 0.650: fade in & slide up into pinned state
-        // p 0.650 -> 0.727: 100% visible & pinned
-        // p > 0.727: pinned in place under WorkedWith slide-up stage
-        if (p < 0.582) {
-          el.style.opacity = '0'
-          el.style.pointerEvents = 'none'
-          el.style.transform = 'translateY(36px)'
-        } else if (p <= 0.650) {
-          const t = (p - 0.582) / 0.068
-          const eased = t * (2 - t) // ease-out
-          el.style.opacity = eased.toFixed(4)
-          el.style.pointerEvents = eased > 0.4 ? 'auto' : 'none'
-          el.style.transform = `translateY(${(36 * (1 - eased)).toFixed(1)}px)`
-        } else {
-          el.style.opacity = '1'
-          el.style.pointerEvents = p < 0.752 ? 'auto' : 'none'
-          el.style.transform = 'translateY(0px)'
-        }
-      },
+      onUpdate: (self) => updateProgress(self.progress),
     })
+
+    // Initial evaluation on mount
+    updateProgress(st.progress || 0)
 
     return () => st.kill()
   }, [isPreloaderDone])
@@ -303,10 +373,10 @@ export default function ProjectShowcase({ isPreloaderDone }) {
             <h2
               style={{
                 fontFamily: "'Outfit', 'Space Grotesk', sans-serif",
-                fontSize: 'clamp(36px, 4.8vw, 68px)',
+                fontSize: 'clamp(28px, 3.6vw, 52px)',
                 fontWeight: 800,
                 letterSpacing: '-0.03em',
-                lineHeight: 1.0,
+                lineHeight: 1.06,
                 textTransform: 'uppercase',
                 color: '#ffffff',
                 margin: 0,
@@ -470,6 +540,51 @@ export default function ProjectShowcase({ isPreloaderDone }) {
               <ArrowRight size={18} />
             </button>
 
+            {/* Auto Slideshow Play / Pause Button */}
+            <button
+              onClick={() => {
+                const nextState = !isPlaying
+                setIsPlaying(nextState)
+                isPlayingRef.current = nextState
+                if (nextState) {
+                  resetAutoPlayTimer()
+                } else if (autoPlayTimerRef.current) {
+                  clearInterval(autoPlayTimerRef.current)
+                }
+              }}
+              aria-label={isPlaying ? 'Pause Auto Slideshow' : 'Resume Auto Slideshow'}
+              title={isPlaying ? 'Pause Auto Slideshow' : 'Resume Auto Slideshow'}
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                border: isPlaying ? '1px solid rgba(0, 240, 255, 0.45)' : '1px solid rgba(255, 255, 255, 0.18)',
+                background: isPlaying ? 'rgba(0, 240, 255, 0.10)' : 'rgba(255, 255, 255, 0.06)',
+                backdropFilter: 'blur(10px)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: isPlaying ? '#00f0ff' : 'rgba(255, 255, 255, 0.65)',
+                cursor: 'pointer',
+                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                outline: 'none',
+                boxShadow: isPlaying ? '0 0 16px rgba(0, 240, 255, 0.25)' : 'none',
+                marginLeft: '4px',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#00f0ff'
+                e.currentTarget.style.color = '#00f0ff'
+                e.currentTarget.style.transform = 'scale(1.08)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = isPlaying ? 'rgba(0, 240, 255, 0.45)' : 'rgba(255, 255, 255, 0.18)'
+                e.currentTarget.style.color = isPlaying ? '#00f0ff' : 'rgba(255, 255, 255, 0.65)'
+                e.currentTarget.style.transform = 'scale(1.0)'
+              }}
+            >
+              {isPlaying ? <Pause size={15} /> : <Play size={15} style={{ marginLeft: '2px' }} />}
+            </button>
+
             {/* Pagination Indicators */}
             <div
               style={{
@@ -490,12 +605,13 @@ export default function ProjectShowcase({ isPreloaderDone }) {
                         handleNavigate(diff)
                       }
                     }}
+                    aria-label={`Go to slide ${idx + 1}`}
                     style={{
                       height: '4px',
-                      width: isActive ? '32px' : '8px',
+                      width: isActive ? '34px' : '8px',
                       borderRadius: '999px',
                       background: isActive ? '#00f0ff' : 'rgba(255, 255, 255, 0.2)',
-                      boxShadow: isActive ? '0 0 12px rgba(0, 240, 255, 0.6)' : 'none',
+                      boxShadow: isActive ? '0 0 14px rgba(0, 240, 255, 0.7)' : 'none',
                       border: 'none',
                       padding: 0,
                       cursor: 'pointer',
@@ -514,6 +630,12 @@ export default function ProjectShowcase({ isPreloaderDone }) {
         {/* ========================================================= */}
         <div
           ref={carouselViewportRef}
+          onMouseEnter={() => {
+            isHoveredRef.current = true
+          }}
+          onMouseLeave={() => {
+            isHoveredRef.current = false
+          }}
           style={{
             position: 'relative',
             height: '100%',

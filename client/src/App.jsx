@@ -4,23 +4,29 @@ import './index.css'
 import Scene from './canvas/Scene'
 import Preloader from './components/Preloader'
 import AboutSection from './components/AboutSection'
+import ServicesSection from './components/ServicesSection'
 import HeroSection from './components/HeroSection'
 import KolkataMapOverlay from './components/KolkataMapOverlay'
 import ProjectShowcase from './components/ProjectShowcase'
 import WorkedWithSection from './components/WorkedWithSection'
 import FooterSection from './components/FooterSection'
 import Navbar from './components/Navbar'
+import MobileView from './components/mobile/MobileView'
 import { useScrollTimeline } from './hooks/useScrollTimeline'
+import { useIsMobileOrTablet } from './hooks/useIsMobileOrTablet'
 
 function App() {
+  const isMobileOrTablet = useIsMobileOrTablet()
   const [isPreloaderDone, setIsPreloaderDone] = useState(false)
   const sceneSnapRef = useRef(null)
 
-  // Initialize Lenis smooth scroll + GSAP ScrollTrigger
-  useScrollTimeline(isPreloaderDone)
+  // Initialize Lenis smooth scroll + GSAP ScrollTrigger ONLY on desktop (not mobile/tablet)
+  useScrollTimeline(isPreloaderDone, !isMobileOrTablet)
 
-  // Lock scroll during preloader, reset to top, and refresh on complete
+  // Lock scroll during preloader, reset to top, and refresh on complete (for desktop)
   useEffect(() => {
+    if (isMobileOrTablet) return
+
     if (!isPreloaderDone) {
       document.body.style.overflow = 'hidden'
       window.scrollTo(0, 0)
@@ -31,7 +37,7 @@ function App() {
         ScrollTrigger.refresh()
       }, 100)
     }
-  }, [isPreloaderDone])
+  }, [isPreloaderDone, isMobileOrTablet])
 
   // Called by HeroSection once it has measured the 'O' gap pixel offset from screen center
   const handleGapMeasured = useCallback((screenOffsetX) => {
@@ -44,6 +50,11 @@ function App() {
       console.warn('[App] sceneSnapRef not set yet')
     }
   }, [])
+
+  // On mobile & tablet: render lightweight, static, zero-WebGL mobile experience
+  if (isMobileOrTablet) {
+    return <MobileView />
+  }
 
   return (
     <div
@@ -68,6 +79,7 @@ function App() {
           onGapMeasured={handleGapMeasured}
         />
         <AboutSection isPreloaderDone={isPreloaderDone} />
+        <ServicesSection isPreloaderDone={isPreloaderDone} />
         <KolkataMapOverlay isPreloaderDone={isPreloaderDone} />
         <ProjectShowcase isPreloaderDone={isPreloaderDone} />
         <WorkedWithSection isPreloaderDone={isPreloaderDone} />
